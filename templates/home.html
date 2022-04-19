@@ -1,0 +1,50 @@
+{% include 'includes/header.html' %}
+ <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% endfor %}
+        {% endif %}
+</div>
+     <center>
+         {% block content %}
+         As off {{ time }}
+         <br/> <br/> <br/> <br/>
+          {{year}}<br>{{month}}
+
+          {{ cal|safe }}
+         <!-- the contents of the the child pages -->
+    <br/>
+    <br/>
+    <br/>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Events This Month...</h5>
+            <p class="card-text">This is the list of the events which will be done this month..</p>
+          </div>
+
+          <div class="card-body">
+           {% if event_list %}
+             {% for event in event_list %}
+                <ul class="list-group list-group-flush" style=" text-align:left;">
+                <li class="list-group-item">{{ event }}<br/> {{ event.event_date }}</li>
+             {% endfor %}
+             {% else %}
+                 <li class="list-group-item">sorry...There is no event this month</li>
+                 </ul>
+             {% endif %}
+
+          </div>
+        </div>
+            <br/>
+    <br/>
+    <hr/>
+    <br/>
+        Copyright (c) {{ current_year }}
+         {% endblock content %}
+     </center>
+ </div>
+{% include 'includes/footer.html' %}

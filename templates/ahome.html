@@ -1,0 +1,20 @@
+{% include 'includes/header.html' %}
+<div class="main-wrapper" style="margin-top:100px;">
+ <div class="container">
+     {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+{{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+        {% endfor %}
+     {% endif%}
+         {% block content %}
+
+         <!-- the contents of the the child pages -->
+
+         {% endblock content %}
+ </div>
+</div>
+{% include 'includes/footer.html' %}

@@ -1,0 +1,26 @@
+{% include 'includes/header.html' %}
+ <div class="main-content">
+     <div class="container">
+         {% block content %}
+         <br/>
+
+         <div class="card">
+  <div class="card-header">
+    {{ event }}
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+        {{ event.name }}<br/>
+         {{ event.event_date}}<br/>
+         {{ event.manager}}<br/>
+         {{ event.attendees }}<br/>
+         {{ event.description }}<br/>
+         {% endblock content %}
+        </p>
+  </div>
+</div>
+
+
+     </div>
+ </div>
+{% include 'includes/footer.html' %}

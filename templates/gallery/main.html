@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}
+Upload now
+{% endblock title %}
+
+{% block content %}
+In The name of Allah
+<form method="POST" enctype="multipart/form-data" action="{% url 'upload-view' %}" id="my-dropzone" class="dropzone dz">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <h4>Title</h4>
+
+    <div class="fallback">
+        <input name="file" type="file" multiple>
+    </div>
+    <div class="modal-footer col-12">
+        <button type="submit" id="submit-all" class="btn btn-primary"  style="border-radius: 20px; width: 100%;">Post</button>
+    </div>
+    <!-- <button type="submit" id="btnAdd">Save</button>-->
+  </form>
+  <div id="showerror">
+
+  </div>
+  <!--
+<button class="upload-control btn-success btn" type="submit" id='submit-all' onclick="document.getElementById('my-dropzone').submit()">
+    <i class="glyphicon glyphicon-upload"></i>
+    <span>Save</span>
+</button> -->
+<!--
+<form class="dropzone dz" method="POST" action="upload/" id="my-dropzone">
+    {% csrf_token %}
+    <div class="fallback">
+         <input name="file" type="file" multiple>
+    </div>
+</form> -->
+<h1>Debug output:</h1>
+<pre id="output"></pre>
+</main>
+
+{% endblock content %}

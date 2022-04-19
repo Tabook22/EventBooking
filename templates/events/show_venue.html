@@ -1,0 +1,51 @@
+{% include 'includes/header.html' %}
+ <div class="main-content">
+     <div class="container">
+         {% block content %}
+         <br/>
+
+  <div class="card">
+  <div class="card-header">
+    {{ venue }}
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+        <ul>
+            <li>
+              Address: {{ venue.address }}
+            </li>
+            <li>
+                Zip Code: {{ venue.zip_code}}
+            </li>
+            <li>
+              Phone: {{ venue.phone }}
+            </li>
+            <li>
+              URL: <a href="{{ venue.web }}">{{ venue.web }}</a>
+            </li>
+            <li>
+              Email: {{ venue.email_address }}
+            </li>
+            <li>
+                Owner:{{venue_owner.first_name}} {{venue_owner.last_name}}
+            </li>
+            <li>
+                Owner's Email:{{venue_owner.email}}
+            </li>
+        </ul>
+        <br/>
+        {% if venue.venue_image %}
+        <img src="{{venue.venue_image.url}}" style="max-width:300px;">
+        {% endif %}
+
+         {% endblock content %}
+        </p>
+  </div>
+</div>
+<br/>
+<br/>
+
+
+     </div>
+ </div>
+{% include 'includes/footer.html' %}

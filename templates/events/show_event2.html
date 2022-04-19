@@ -1,0 +1,44 @@
+{% extends 'ahome.html' %}
+
+{% block content %}
+<h1>Show Event</h1>
+
+<div class="card">
+  <div class="card-header">
+   <h3>{{ event }}</h1>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Venue: {{event.venue}}</h5>
+    <p class="card-text">
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Date:</strong> {{event.event_date}}</li>
+        <li class="list-group-item"><strong>Days Till Event:</strong> {{event.Days_till}}</li>
+        <li class="list-group-item"><strong>Venue Website:</strong> {{event.venue.web}}</li>
+        <li class="list-group-item"><strong>Manager: </strong>{{event.manager}}</li>
+        <li class="list-group-item"><strong>Description:</strong> {{event.description}}</li>
+        <li class="list-group-item"><strong>Approved:</strong>{{ event.approved }}</li>
+        <li class="list-group-item"><strong>Confirmed attendees:</strong><br/>
+        {% for user in event.attendees.all %}
+        {{ user }} <br/>
+        <br/>
+        {% endfor %}
+        </li>
+    </ul>
+
+    </p>
+
+  </div>
+  {% if user.is_authenticated %}
+  {% if user == event.manager %}
+      <div class="card-footer text-muted">
+        <a href="{% url 'update-event' event.id %}" class="btn btn-outline-secondary btn-sm">Update Event</a>
+         <a href="{% url 'delete-event' event.id %}" class="btn btn-outline-danger btn-sm">Delete Event</a>
+    </div>
+    {% endif%}
+    {% endif %}
+</div>
+<br/><br/>
+
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'ahome.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <!--{% if submitted %}-->
+        <div class="row">
+            <div class="col-12">
+                <h1 class="alert alert-success">
+                    Your Venue data was submitted succesfully !!!
+                </h1>
+            </div>
+        </div>
+    <!--{% else %}-->
+        <div class="row">
+            <form action="" method=POST>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit" class="btn btn-secondary">
+            </form>
+        </div>
+    <!--{% endif %}-->
+{% else %}
+<h1> Sorry ! you are not allowed to add new Events !!!</h1>
+<br/><br/>
+<a class="nav-link" href="{% url 'login' %}">Login</a>
+{% endif %}
+{% endblock %}

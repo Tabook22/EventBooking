@@ -1,0 +1,23 @@
+{% extends 'ahome.html' %}
+
+{% block content %}
+{% if form.errors %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+There are some errors with your form data ...
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<div class="shadow p-4 mb-5 bg-body rounded">
+<h1>Register New Users</h1>
+
+<form action="{% url 'register' %}" method=POST>
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <br/><br/>
+    <input type="submit" value="Register" class="btn btn-secondary">
+
+</form>
+</div>
+{% endblock %}

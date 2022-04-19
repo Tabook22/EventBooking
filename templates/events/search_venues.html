@@ -1,0 +1,56 @@
+{% include 'includes/header.html' %}
+ <div class="main-content">
+     <div class="container">
+         <h1> You Search Result</h1>
+         {% block content %}
+             {% if searched %}
+                {% if thereResults %}
+                    {% for venue in venues %}
+                     <div class="card">
+                      <div class="card-header">
+                        {{ venue }}
+                      </div>
+                      <div class="card-body">
+                        <p class="card-text">
+                            <ul>
+                                <li>
+                                  Address: {{ venue.address }}
+                                </li>
+                                <li>
+                                    Zip Code: {{ venue.zip_code}}
+                                </li>
+                                <li>
+                                  Phone: {{ venue.phone }}
+                                </li>
+                                <li>
+                                  URL: <a href="{{ venue.web }}">{{ venue.web }}</a>
+                                </li>
+                                <li>
+                                  Email: {{ venue.email_address }}
+                                </li>
+                                <li>
+                                    Owner :{{venue_owner.first_name}} {{venue_owner.last_name}}
+                                </li>
+                                <li>
+                                    Owner's Email:{{venue_owner.email}}
+                                </li>
+                            </ul>
+
+                            </p>
+                      </div>
+                    </div>
+             <br/>
+<br/>
+
+                    {% endfor %}
+                {% else %}
+                    {{ msg }}
+                {% endif %}
+             {% else %}
+                <h1>No Result Found</h1>
+             {% endif %}
+
+         {% endblock content %}
+     </div>
+ </div>
+{% include 'includes/footer.html' %}

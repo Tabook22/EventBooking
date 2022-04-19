@@ -1,0 +1,23 @@
+{% extends 'ahome.html' %}
+
+{% block content %}
+
+{% if submitted %}
+    <div class="row">
+        <div class="col-12">
+            <h1 class="alert alert-success">
+                Your video data was submitted succesfully !!!
+            </h1>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <form action="" method=POST>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" class="btn btn-secondary">
+        </form>
+    </div>
+{% endif %}
+
+{% endblock %}
