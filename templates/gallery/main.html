@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends 'ahome.html' %}
+{% load widget_tweaks %}
 {% block title %}
 Upload now
 {% endblock title %}
@@ -7,35 +8,27 @@ Upload now
 In The name of Allah
 <form method="POST" enctype="multipart/form-data" action="{% url 'upload-view' %}" id="my-dropzone" class="dropzone dz">
     {% csrf_token %}
-    {{ form.as_p }}
+    <!--{{ form.as_p }}-->
+    {% render_field form.name class="form-control form-control-lg mb-3" placeholder="Gallery Title" %}
+    {% render_field form.event_date class="form-control form-control-lg mb-3" placeholder="Date" %}
+    {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
+    {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
 
-    <h4>Title</h4>
-
+    <h4 style="margin-top:40px;color;">Please drag and drop images, <span style="color:red;">(Max No. 4)</span></h4>
+    <hr>
     <div class="fallback">
         <input name="file" type="file" multiple>
     </div>
-    <div class="modal-footer col-12">
-        <button type="submit" id="submit-all" class="btn btn-primary"  style="border-radius: 20px; width: 100%;">Post</button>
-    </div>
+
     <!-- <button type="submit" id="btnAdd">Save</button>-->
   </form>
-  <div id="showerror">
+    <div id="showerror">
 
   </div>
-  <!--
-<button class="upload-control btn-success btn" type="submit" id='submit-all' onclick="document.getElementById('my-dropzone').submit()">
-    <i class="glyphicon glyphicon-upload"></i>
-    <span>Save</span>
-</button> -->
-<!--
-<form class="dropzone dz" method="POST" action="upload/" id="my-dropzone">
-    {% csrf_token %}
-    <div class="fallback">
-         <input name="file" type="file" multiple>
-    </div>
-</form> -->
-<h1>Debug output:</h1>
-<pre id="output"></pre>
-</main>
+  <br/>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="margin-top:20px;">Save Images</button>
+</div>
+
 
 {% endblock content %}

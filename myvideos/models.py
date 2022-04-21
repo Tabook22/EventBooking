@@ -103,5 +103,5 @@ class EventGallery(models.Model):
     event_image=models.ImageField(null=True, blank=True, upload_to='images/%Y/%m/%d')
 
     def __str__(self):
-        return str(self.pk)
+        return str(self.name)
 

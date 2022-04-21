@@ -74,13 +74,14 @@ class EventGalleryForm(ModelForm):
         model =EventGallery
         fields=('name','event_date','eventname','venuename')
         labels={'name':'','event_date':'','event name':'','venu name':''}
+        '''
         Widgets={
             'name':forms.TextInput(attrs={'class':'form-control', 'placeholder':'name'}),
             'event_date':DateInput(format=('%Y-%m-%d'),  attrs={'class':'form-control','placeholder':'event_date'}),
             'eventname':forms.Select(attrs={'class':'form-select','placeholder':'event'}),
             'venuename':forms.Select(attrs={'class':'form-select','placeholder':'venue'}),
             }
-
+        '''
 #Venue Form
 class VenueForm(ModelForm):
     class Meta:
