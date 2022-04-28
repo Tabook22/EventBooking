@@ -1,3 +1,5 @@
+import json
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 import calendar
@@ -6,7 +8,8 @@ from .forms import VideoForm, VenueForm, EventForm, EventFormAdmin, EventGallery
 from datetime import datetime
 from .models import Event,Venue, EventGallery
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,FileResponse
+from django.core import serializers
 import csv
 from django.contrib import messages
 
@@ -16,12 +19,134 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-
+from django.db.models import Q
 #Import Paginaiton Stuff
 from django.core.paginator import Paginator, EmptyPage
 
+# Delete All images 
+def detleteallimages(request, getname):
+    #here we are going to delete more than one object that is why we used filter() method
+    allimg=EventGallery.objects.all().filter(name=getname)
+    collname=getname #storing the gallery collection name to send it back to the managegallery.html
+    #here we are looping through the selecte objects with gallery collection name getname
+    for img in allimg:
+        img.delete()
+        
+    messages.success(request,"All Images in the Gallery Collections were deleted successfully for collection "+getname)
+    img_list=EventGallery.objects.all().order_by('-event_date')
+    #To get only the distinct names of the event gallery
+    evn_list=EventGallery.objects.all().values('name').distinct()
+    template_name='gallery/managegallery.html'
+    return render(request,template_name,{'img_list':img_list,
+                                                'evn_list':evn_list,'getname':'nogallery','collname':collname
+                                                }
+                        )
+    #return redirect('home')
 
-#Image Gallery View
+
+
+#Here we are going to manage the uploaded images
+def manageGallery(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            #values = request.POST.getlist('result') or request.POST.get('result) or request.POST['result']
+            getname=request.POST.get("selevent")
+
+            #here we need to filter the EventGallery get more than one value, that is why we use filter,
+            #we choose to get the first one, because the resut is just a repetion
+            #the result will be a tuple
+            getevent=EventGallery.objects.all().filter(name=getname).values_list('eventname','event_date','venuename').first()
+
+            #because the result is a tuble that is why we use the indexes 0, 1 to get the first and second values
+            getevntname=getevent[0]
+            geteventdate=getevent[1]
+            getvenuename=getevent[2]
+            
+            #complex queries, to filter by eventname and date, show only images with the same event gallery and same date
+            img_list=EventGallery.objects.filter (Q(eventname=getevntname) & Q(event_date=geteventdate))
+
+            #To get only the distinct names of the event gallery
+            evn_list=EventGallery.objects.all().values('name').distinct()
+        
+        
+            
+            #Get the number of images in each gallery event
+            img_count=img_list.count()
+            #get event detaisl;
+            eventdetails=Event.objects.get(pk=getevntname)
+            #get venue detaisl;
+            venuedetails=Venue.objects.get(pk=getvenuename)
+            template_name='gallery/managegallery.html'
+            return render(request, template_name,{'img_list':img_list,
+                                                'evn_list':evn_list,
+                                                'img_count':img_count,
+                                                'getname':getname,
+                                                'geteventdate':geteventdate,
+                                                'eventdetails':eventdetails.name,
+                                                'venuedetails':venuedetails.name,
+                                                }
+                        )
+        else:
+            img_list=EventGallery.objects.all().order_by('-event_date')
+            #To get only the distinct names of the event gallery
+            evn_list=EventGallery.objects.all().values('name').distinct()
+            template_name='gallery/managegallery.html'
+            return render(request, template_name,{'img_list':img_list,
+                                                'evn_list':evn_list,'getname':'nogallery'
+                                                }
+                        )
+            
+    else:
+        messages.success(request,("You are not authroized to view this page !!"))
+        return redirect('home')
+            
+    pass
+    
+    
+#Search for specific gallery 
+def showgallery(request):
+    # request should be POST
+    if request.method == "POST":
+        #values = request.POST.getlist('result') or request.POST.get('result) or request.POST['result']
+        getname=request.POST.get("selevent")
+
+        #here we need to filter the EventGallery get more than one value, that is why we use filter,
+        #we choose to get the first one, because the resut is just a repetion
+        #the result will be a tuple
+        getevent=EventGallery.objects.all().filter(name=getname).values_list('eventname','event_date','venuename').first()
+
+        #because the result is a tuble that is why we use the indexes 0, 1 to get the first and second values
+        getevntname=getevent[0]
+        geteventdate=getevent[1]
+        getvenuename=getevent[2]
+        
+        #complex queries, to filter by eventname and date, show only images with the same event gallery and same date
+        img_list=EventGallery.objects.filter (Q(eventname=getevntname) & Q(event_date=geteventdate))
+
+        #To get only the distinct names of the event gallery
+        evn_list=EventGallery.objects.all().values('name').distinct()
+    
+      
+        
+        #Get the number of images in each gallery event
+        img_count=img_list.count()
+        #get event detaisl;
+        eventdetails=Event.objects.get(pk=getevntname)
+        #get venue detaisl;
+        venuedetails=Venue.objects.get(pk=getvenuename)
+        template_name='gallery/gallerylist.html'
+        return render(request, template_name,{'img_list':img_list,
+                                              'evn_list':evn_list,
+                                              'img_count':img_count,
+                                              'getname':getname,
+                                              'geteventdate':geteventdate,
+                                              'eventdetails':eventdetails.name,
+                                              'venuedetails':venuedetails.name,
+                                              }
+                      )
+        
+        
+#Image Gallery View------------------------------------------------------
 def galleryview(request):
     if request.method=="POST":
         pass
@@ -40,15 +165,34 @@ def file_upload_view(request):
         #it is important to know that Django automatically handles multiple
         #inputs how have the same name, in such case it hands your code a list of values
         #instead of a single value.
+        print(request.FILES)
         my_file=request.FILES.get('file')
         if form.is_valid():
             eventimg=form.save(commit=False)
             eventimg.event_image=my_file
             eventimg.save()
-            return HttpResponse('In The Name of Allah')
+           # return HttpResponseRedirect('/')
         else:
             return HttpResponse('Thank Allah more merci more mercifull')
+
     return JsonResponse({'post':'false'})
+
+
+
+#Show Gallery List --------------------------------------------------------------------
+def gallerylist(request):
+     #get all the images
+    evn_list=EventGallery.objects.all().values('name').distinct()
+    #evn_list=EventGallery.objects.all()
+    img_list=EventGallery.objects.all()
+
+    #Get counts
+    img_count=EventGallery.objects.all().count()
+
+    img_list=EventGallery.objects.all().order_by('-event_date')
+    template_name='gallery/gallerylist.html'
+    return render(request, template_name,{'img_list':img_list,'evn_list':evn_list,'img_count':img_count})
+
 
 #Show single event
 def show_event(request, event_id):

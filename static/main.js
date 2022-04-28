@@ -30,6 +30,8 @@ const myDropzone = new Dropzone("#my-dropzone",{
         this.on("successmultiple", function(files, response) {
           // Gets triggered when the files have successfully been sent.
           // Redirect user or notify of success.
+          
+  
         });
         this.on("errormultiple", function(files, response) {
           // Gets triggered when there was an error sending the files.
@@ -51,6 +53,41 @@ const myDropzone = new Dropzone("#my-dropzone",{
             //clear the error message
             document.getElementById('showerror').innerHTML = "";
         });
+        // one upload complete remove files
+        this.on("complete", function(file) { 
+          document.getElementById("my-dropzone").innerHTML = "";
+          document.getElementById("divbtn").innerHTML = "";
+          setTimeout(function(){
+            window.open("gallery_list", "_self");
+         }, 2000);//wait 2 seconds 
+          var d1 = document.getElementById('showeMsg');
+          d1.insertAdjacentHTML('beforeend', '<span style="color:Green;font-weight:bold;">Images Uploaded Succeefully</span>');
+       });
+       
+ }
+});
 
-    }
-})
+
+//Ajax call to upload
+    // Submit post on submit
+
+  //  function getCookie(name) {
+  //    let cookieValue = null;
+  //    if (document.cookie && document.cookie !== '') {
+  //        const cookies = document.cookie.split(';');
+  //        for (let i = 0; i < cookies.length; i++) {
+  //            const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+  //            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+  //                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+  //                break;
+  //            }
+  //        }
+  //    }
+  //    return cookieValue;
+  //}
+  //const csrftoken = getCookie('csrftoken');
+
+
+
+    

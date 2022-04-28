@@ -1,0 +1,88 @@
+{% extends 'ahome.html' %}
+{% load static %}
+{% block title %}
+Galler List
+{% endblock title %}
+
+{% block content %}
+<h1>Gallery Collections</h1>
+<div class="container">
+    <div class="row">
+
+        <form id="post-form" method="POST" action="{% url 'show-gallery' %}">
+            {% csrf_token %}
+            <select id="selevent" name="selevent" class="form-select" aria-label="Default select example">
+                <option selected disabled value="0">Please select an event</option>
+                {% for img in evn_list %}
+                <option value="{{ img.name }}">{{img.name}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="margin-top:20px;">
+                Select Event</button>
+        </form>
+    </div>
+    <br/>
+    <div id="envinfo" class="alert alert-light" role="alert">
+        <div class="card" style="width:100%;">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><span style="font-weight:bold">Gallery Collection:-</span> {{getname}}</li>
+              <li class="list-group-item">{{geteventdate}}</li>
+              <li class="list-group-item"><span style="font-weight:bold">Event Name:- </span>{{eventdetails}}</li>
+              <li class="list-group-item"><span style="font-weight:bold">Venue:-</span>{{venuedetails}}</li>
+              <li class="list-group-item"><span style="font-weight:bold">Total Images:-</span>{{img_count}}</li>
+            </ul>
+          </div>       
+    </div> 
+</div>
+<br />
+<div class="container">
+    <div id="allimg" class="row">
+        {% for img in img_list %}
+        {% if img.event_image %}
+        <div class="card" style="padding:10px;width: 18rem; display:flex;justify-content:center;align-items: center;">
+            <a href="{{ img.event_image.url }}" data-lightbox="gallery">
+                <img src="{{ img.event_image.url }}" width="155" class="img-thumbnail" alt="{{ img.name }}">
+            </a>
+            <!--<img src="{{ img.event_image.url }}" class="card-img-top" alt="{{ img.name }}" style="width:120px;"> -->
+            <!--
+            <div class="card-body">
+                <p class="card-text">{{ img.name }} <br /> <span
+                        style="color:gray;font-size:.8rem;">{{img.event_date}}</span></p>
+            </div>-->
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
+    </div>
+</div>
+<!-- Check the submite button-->
+<script type="text/javascript">
+    $('#post-form').submit(function(e){
+        var selev = $('#selevent option:selected' ).val();
+        $('#allimg').empty(); //clear all images
+        $('#envinfo').empty(); // clear gallery event information
+        //e.preventDefault(); 
+        if (selev==0){
+            e.preventDefault();    //stop form from submitting
+            $('#envinfo').append('<span style="color:red;">Sorry!. Please Select the Gallery Event </span>');
+        }
+
+    // do ajax now
+    //console.log("In the name of Allah"); 
+});
+
+
+
+
+
+</script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- LightBox css -->
+<link rel="stylesheet" type="text/css" href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}" />
+<!-- LightBox Js -->
+<script type="text/javascript" src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"></script>
+
+
+{% endblock content %}

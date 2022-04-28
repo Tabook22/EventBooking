@@ -43,8 +43,15 @@
           </ul>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'gallery-view' %}">Phonto Gallery</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Phone Gallery
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'gallery-view' %}">Add New Images</a></li>
+            <li><a class="dropdown-item" href="{% url 'gallery-list' %}">Image List</a></li>
+            <li><a class="dropdown-item" href="{% url 'manage-Gallery' %}">Manage Gallery Collections</a></li>
+          </ul>{% url 'venue-csv' %}
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>

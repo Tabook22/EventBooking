@@ -1,34 +1,39 @@
 {% extends 'ahome.html' %}
+{% load static %}
 {% load widget_tweaks %}
 {% block title %}
 Upload now
 {% endblock title %}
 
 {% block content %}
-In The name of Allah
+<div id="showeMsg">
+
+</div>
 <form method="POST" enctype="multipart/form-data" action="{% url 'upload-view' %}" id="my-dropzone" class="dropzone dz">
     {% csrf_token %}
     <!--{{ form.as_p }}-->
+    <!-- here i used widget_tweaks package to customize my form -->
     {% render_field form.name class="form-control form-control-lg mb-3" placeholder="Gallery Title" %}
-    {% render_field form.event_date class="form-control form-control-lg mb-3" placeholder="Date" %}
+    {% render_field form.event_date type="date" class="form-control form-control-lg mb-3" placeholder="Date" style="width:auto;" %}
     {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
     {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
 
-    <h4 style="margin-top:40px;color;">Please drag and drop images, <span style="color:red;">(Max No. 4)</span></h4>
+    <h4 style="margin-top:40px;">Please drag and drop images, <span style="color:red;">(Max No. 4)</span></h4>
     <hr>
     <div class="fallback">
         <input name="file" type="file" multiple>
     </div>
 
     <!-- <button type="submit" id="btnAdd">Save</button>-->
-  </form>
-    <div id="showerror">
+</form>
+<div id="showerror">
 
-  </div>
-  <br/>
-  <div class="d-grid gap-2 col-6 mx-auto">
-    <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="margin-top:20px;">Save Images</button>
+</div>
+<br />
+<div class="d-grid gap-2 col-6 mx-auto" id="divbtn">
+    <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="margin-top:20px;">Save
+        Images</button>
 </div>
 
-
+<script src="{% static 'main.js' %}" defer></script>
 {% endblock content %}

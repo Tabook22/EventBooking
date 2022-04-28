@@ -26,4 +26,8 @@ urlpatterns = [
     path('show_event/<event_id>', views.show_event, name='show-event'),
     path('gallery', views.galleryview, name='gallery-view'),
     path('upload/', views.file_upload_view, name='upload-view'),
+    path('gallery_list/', views.gallerylist, name='gallery-list'),
+    path('show_gallery/', views.showgallery, name='show-gallery'),
+    path('manage_Gallery/', views.manageGallery, name="manage-Gallery"),
+    path('delete_all/<str:getname>', views.detleteallimages, name="delete-all"),
 ]
