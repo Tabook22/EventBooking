@@ -181,24 +181,47 @@ body{
   }
 
   /**Delete Confirmation---------------------------------------------------**/
-  #delete_message
+  #delmsg_wrapper{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    position:absolute;
+    width:100vw;
+    height:100vh;
+    background-color:#010511;
+    background-color: rgba(20, 18, 35, 0.75); /* Transparent black */
+    z-index:100;
+    top:0;
+    left:0;
+  }
+  #delmsg_content
 {
-	display:none;
-	position:fixed;
-	top:0px;
-	width:100%;
-	height:150px;
-	background-color:#5882FA;
+	
+	/*position:fixed;*/
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+	width:50%;
+	height:12rem;
+	background-color:#ffffff;
 	text-align:center;
+  z-index:101;
+  border-radius: 25px;
+  -webkit-box-shadow: 10px 10px 28px -9px rgba(0,0,0,1);
+-moz-box-shadow: 10px 10px 28px -9px rgba(0,0,0,1);
+box-shadow: 10px 10px 28px -9px rgba(0,0,0,1);
 }
 #delete_message h2
 {
-	color:#0431B4;
+	color:#ffffff;
 }
 #delete,#cancel
 {
 	border:none;
-	background:none;
+	background:blue;
 	width:100px;
 	height:40px;
 	font-size:18px;

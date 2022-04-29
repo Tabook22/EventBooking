@@ -1,20 +1,30 @@
 {% include 'includes/header.html' %}
 <div class="main-wrapper" style="margin-top:60px;">
- <div class="container">
-     {% if messages %}
+  <div class="container">
+    <div class="row" id="msgcont">
+      {% if messages %}
         {% for message in messages %}
 
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-{{ message }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endfor %}
-     {% endif%}
-         {% block content %}
+      {% endif%}
+    </div>
+    <!-- Clear the message dive-->
+    <script type="text/javascript">
+      let msg=document.getElementById("msgcont");
+      setTimeout(function(){
+        document.getElementById("msgcont").innerHTML=""; 
+}, 5000);//wait 2 seconds
+    </script>
+    {% block content %}
 
-         <!-- the contents of the the child pages -->
+    <!-- the contents of the the child pages -->
 
-         {% endblock content %}
- </div>
+    {% endblock content %}
+    
+  </div>
 </div>
 {% include 'includes/footer.html' %}

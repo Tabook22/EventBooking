@@ -38,7 +38,7 @@ def detleteallimages(request, getname):
     evn_list=EventGallery.objects.all().values('name').distinct()
     template_name='gallery/managegallery.html'
     return render(request,template_name,{'img_list':img_list,
-                                                'evn_list':evn_list,'getname':'nogallery','collname':collname
+                                                'evn_list':evn_list,'getname':'nogallery','collname':"All Images In The Gallery"
                                                 }
                         )
     #return redirect('home')
@@ -84,6 +84,7 @@ def manageGallery(request):
                                                 'geteventdate':geteventdate,
                                                 'eventdetails':eventdetails.name,
                                                 'venuedetails':venuedetails.name,
+                                                'collname':getname,
                                                 }
                         )
         else:
