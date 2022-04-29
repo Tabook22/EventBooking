@@ -18,7 +18,8 @@ Galler List
                     <option value="{{ img.name }}">{{img.name}}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="width:10rem;font-size:1rem;">
+                <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg"
+                    style="width:10rem;font-size:1rem;">
                     Show Images </button>
             </div>
 
@@ -30,7 +31,8 @@ Galler List
 <div class="container">
     <div class="row" style="padding-bottom:10px;">
         <div style="display:flex; justify-content:center;align-items: center;flex-direction: row;">
-            <a href="#" id="deleteall" class="btn btn-danger btn-lg"style="width:10rem;margin-right:20px;">Delete all</a>
+            <a href="#" id="deleteall" class="btn btn-danger btn-lg" style="width:10rem;margin-right:20px;">Delete
+                all</a>
             <button type="button" id="deleteselected" class="btn btn-outline-secondary btn-lg" style="width:12rem;">
                 Delete selected</button>
         </div>
@@ -60,76 +62,77 @@ Galler List
 </div>
 <div id="delmsg_wrapper">
     <div id="delmsg_content">
-    <h2 style="font-size:1rem;">Are You Sure You Want To Delete all images in <span id="getselcol" style="color:red;font-weight:bold;font-size:1rem;"></span></h2>
-    <div>
-     <a href="{% url 'delete-all' getname %}" id="delselect" class="btn btn-danger btn-lg"
-    style="width:10rem;margin-right:20px;">Delete all</a>
-    <input type="button" value="Cancel" id="canceldel" class="btn btn-secondary btn-lg"
-    style="width:10rem;margin-right:20px;">   
-    </div>
+        <h2 style="font-size:1rem;">Are You Sure You Want To Delete all images in <span id="getselcol"
+                style="color:red;font-weight:bold;font-size:1rem;"></span></h2>
+        <div>
+            <a href="{% url 'delete-all' getname %}" id="delallsections" class="btn btn-danger btn-lg"
+                style="width:10rem;margin-right:20px;">Delete all</a>
+            <input type="button" value="Cancel" id="canceldel" class="btn btn-secondary btn-lg"
+                style="width:10rem;margin-right:20px;">
+        </div>
     </div>
 </div>
-<!-- Check the submite button-->
+
 <script type="text/javascript">
     //change the value of the dropdown options, because the delete will not work if the selected value is the first one
+    //by default the getname="nogallery", if there is no selection when the page is refereshed.
+    //this is important because we will get an error if getname is empty.
     $(document).ready(function () {
         $('#selevent option[value="{{getname}}"]').attr('selected', 'selected');
-        $("#delmsg_wrapper").css("display", "none");
-
+        $("#delmsg_wrapper").css("display", "none"); // remove the delmsg_wrapper, when first page is loaded.
     });
+
+    //check to see if the selection option is chenged or not, and if it changed go the delallsections button and change its href
+    //we do this to make sure that when we click the second delete button in the popup modal the proper link to the delete_all page contains all the needed information
+    $('#selevent').on('change', function (e) {
+    var selectVal = $("#selevent option:selected").text();
+    var valueSelected = this.value;
+        let newUrl="/videos/delete_all/" + selectVal
+        alert(newUrl);
+        $("#delallsections").attr("href", newUrl); 
+    });
+   
+    //here when we select options from the dropdown list and we search for the image collections associated with that 
+    //image gallery collection
     $('#post-form').submit(function (e) {
-        var selev = $('#selevent option:selected').val();
-        $('#allimg').empty(); //clear all images
-        $('#envinfo').empty(); // clear gallery event information
-        //e.preventDefault(); 
+        var selev = $('#selevent option:selected').val(); // get the selected value
+        $('#allimg')
+            .empty(); //clear all images to show only the images in the selected image gallery collection.
         if (selev == 0) {
-            e.preventDefault(); //stop form from submitting
-            $('#envinfo').append('<span style="color:red;">Sorry!. Please Select the Gallery Event </span>');
+            //if we are at the first image collection means we didn't choosed any image collection yet
+            e.preventDefault(); //stop form from submitting, no data will be submitted
+            $('#envinfo').append(
+                '<span style="color:red;">Sorry!. Please Select the Gallery Event </span>'
+                ); // display error message
         }
-
-        // do ajax now
-        //console.log("In the name of Allah"); 
     });
-
-    //check if the page is fully loaded,if so check the getname variable is it empty or not
-    //check for Navigation Timing API support
-
 
     //if delete all is clicked we want to make sure the user selected an image gallery collection to be fully deleted
     $('#deleteall').on('click', function (e) {
         let selev = $('#selevent option:selected').val() //get the select option value
         let selet = $('#selevent option:selected').text() //get the selected option text
-        $("#getselcol").text(selet);
+        $("#getselcol").text(selet); // to display it in the info section
+
         //if the selected value is the first value in the selection menue then abort
         if (selev == 0) {
             e.preventDefault(); //stop form from submitting
             $('#envinfo').empty();
             $('#envinfo').append('<span style="color:red;">Sorry!. Please Select the Gallery Event </span>');
-        }else{
+        } else {
             //show delmsg_wrapper
             $("#delmsg_wrapper").css("display", "flex");
         }
-        });    
-        
+    });
 
-        //if(!confirm("Do you want to really delete this?")) {
-        //    return false;
-        //}
-
-
-       $("#delselect").on('click',function(){ 
-        //    alert("In The Name of Allah")
-       // document.getElementById("envinfo").innerHTML=""; 
-
-         hide();
-   });
-        $("#canceldel").click(function () {
-            hide();
-        });
-
+    $("#delallsections").on('click', function () {
+        // the delete all button will send a request to server first , the it will call the hide()function
+        hide();
+    });
+    $("#canceldel").click(function () {
+        hide();
+    });
 
     function hide() {
-       // $("#delmsg_wrapper").slideUp();
         $("#delmsg_wrapper").css("display", "none");
 
     }
