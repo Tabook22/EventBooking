@@ -29,8 +29,15 @@ Galler List
 </div>
 <br />
 <div class="container">
-    <div class="row" style="padding-bottom:10px;">
-        <div style="display:flex; justify-content:center;align-items: center;flex-direction: row;">
+
+    <div class="row">
+        <div id="envinfo" class="alert alert-light" role="alert">{{collname}}</div>
+    </div>
+
+    <div id="allimg" class="row">
+    <div class="row">
+        <div style="display:flex; justify-content:first;align-items: center;flex-direction: row;">
+            <input type="checkbox" id="select_all" class="form-check-input" /> Select all
             <a href="#" id="deleteall" class="btn btn-danger btn-lg" style="width:10rem;margin-right:20px;">Delete
                 all</a>
             <button type="button" id="deleteselected" class="btn btn-outline-secondary btn-lg" style="width:12rem;">
@@ -38,29 +45,49 @@ Galler List
         </div>
 
     </div>
-    <div class="row">
-        <div id="envinfo" class="alert alert-light" role="alert">{{collname}}</div>
-    </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for img in img_list %}
+                {% if img.event_image %}
 
-    <div id="allimg" class="row">
-        {% for img in img_list %}
-        {% if img.event_image %}
+                <tr>
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                            <input id="select_all" type="checkbox" class="form-check-input checkbox" value="img.id" />
+                    </td>
+                    <td>
+                        <img src="{{ img.event_image.url }}" class="card-img-top" alt="{{ img.name }}"
+                            style="width:120px;">
+                    </td>
+                    <td>
+                        <div style="display:flex; justify-content:last;align-items: center;flex-direction: row;">
+                            <p style="font-size:1rem;color:#3b3b3b; width:80%">{{img.comment}}</p>
+                            <a href="#" id="deleteall" class="btn btn-secondary btn-lg" style="width:20%;margin-right:20px;">Edit Image</a>
+                    </td>
+                </tr>
 
-        <div class="card"
-            style="padding:10px;width: 18rem; display:flex;justify-content:center;align-items: center;flex-direction: column;">
-            <img src="{{ img.event_image.url }}" class="card-img-top" alt="{{ img.name }}"
-                style="width:120px;height:125px;">
-            <div
-                style="margin-top:5px;border-top:1px solid gray;width:100%;display:flex;justify-content:center;align-items: center; ">
-                <input type="checkbox" class="form-check-input" value="img.id" />
-            </div>
-
-        </div>
         {% endif %}
         {% endfor %}
+
+            </tbody>
+        </table>
+
+
     </div>
+
 </div>
-<div id="delmsg_wrapper">
+</div>
+<div id="delmsg_wrapper" style="display:none;">
     <div id="delmsg_content">
         <h2 style="font-size:1rem;">Are You Sure You Want To Delete all images in <span id="getselcol"
                 style="color:red;font-weight:bold;font-size:1rem;"></span></h2>
@@ -79,63 +106,10 @@ Galler List
     //this is important because we will get an error if getname is empty.
     $(document).ready(function () {
         $('#selevent option[value="{{getname}}"]').attr('selected', 'selected');
-        $("#delmsg_wrapper").css("display", "none"); // remove the delmsg_wrapper, when first page is loaded.
+        //$("#delmsg_wrapper").css("display", "none"); // remove the delmsg_wrapper, when first page is loaded.
     });
-
-    //check to see if the selection option is chenged or not, and if it changed go the delallsections button and change its href
-    //we do this to make sure that when we click the second delete button in the popup modal the proper link to the delete_all page contains all the needed information
-    $('#selevent').on('change', function (e) {
-    var selectVal = $("#selevent option:selected").text();
-    var valueSelected = this.value;
-        let newUrl="/videos/delete_all/" + selectVal
-        $("#delallsections").attr("href", newUrl); 
-    });
-   
-    //here when we select options from the dropdown list and we search for the image collections associated with that 
-    //image gallery collection
-    $('#post-form').submit(function (e) {
-        var selev = $('#selevent option:selected').val(); // get the selected value
-        $('#allimg')
-            .empty(); //clear all images to show only the images in the selected image gallery collection.
-        if (selev == 0) {
-            //if we are at the first image collection means we didn't choosed any image collection yet
-            e.preventDefault(); //stop form from submitting, no data will be submitted
-            $('#envinfo').append(
-                '<span style="color:red;">Sorry!. Please Select the Gallery Event </span>'
-                ); // display error message
-        }
-    });
-
-    //if delete all is clicked we want to make sure the user selected an image gallery collection to be fully deleted
-    $('#deleteall').on('click', function (e) {
-        let selev = $('#selevent option:selected').val() //get the select option value
-        let selet = $('#selevent option:selected').text() //get the selected option text
-        $("#getselcol").text(selet); // to display it in the info section
-
-        //if the selected value is the first value in the selection menue then abort
-        if (selev == 0) {
-            e.preventDefault(); //stop form from submitting
-            $('#envinfo').empty();
-            $('#envinfo').append('<span style="color:red;">Sorry!. Please Select the Gallery Event </span>');
-        } else {
-            //show delmsg_wrapper
-            $("#delmsg_wrapper").css("display", "flex");
-        }
-    });
-
-    $("#delallsections").on('click', function () {
-        // the delete all button will send a request to server first , the it will call the hide()function
-        hide();
-    });
-    $("#canceldel").click(function () {
-        hide();
-    });
-
-    function hide() {
-        $("#delmsg_wrapper").css("display", "none");
-
-    }
 </script>
+
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -143,6 +117,7 @@ Galler List
 <link rel="stylesheet" type="text/css" href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}" />
 <!-- LightBox Js -->
 <script type="text/javascript" src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"></script>
-
+<!-- Customize Javascript -->
+<script type="text/javascript" src="{% static 'managegallery.js' %}"></script>
 
 {% endblock content %}
