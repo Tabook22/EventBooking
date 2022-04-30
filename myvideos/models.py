@@ -101,6 +101,7 @@ class EventGallery(models.Model):
     eventname=models.ForeignKey(Event,blank=True, null=True, on_delete=models.CASCADE)
     venuename=models.ForeignKey(Venue, blank=True, null=True, on_delete=models.CASCADE)
     event_image=models.ImageField(null=True, blank=True, upload_to='images/%Y/%m/%d')
+    comment=models.TextField("Comment", null=True, blank=True)
 
     def __str__(self):
         return str(self.name)
