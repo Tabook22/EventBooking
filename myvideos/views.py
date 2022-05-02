@@ -25,23 +25,35 @@ from django.core.paginator import Paginator, EmptyPage
 
 # Delete All images 
 def detleteallimages(request, getname):
-    #here we are going to delete more than one object that is why we used filter() method
-    allimg=EventGallery.objects.all().filter(name=getname)
-    collname=getname #storing the gallery collection name to send it back to the managegallery.html
-    #here we are looping through the selecte objects with gallery collection name getname
-    for img in allimg:
-        img.delete()
-        
-    messages.success(request,"All Images in the Gallery Collections were deleted successfully for collection "+getname)
+    # the Idea here is sent text values then split them to create an array, then loop throught that array and delete images
+    #because we sent a string of values for example 10 20 12 3 5 and so on. we need to split them based on whitespace, that will create an array of values for example
+    #[10,20,12,3,5]
+    getname=getname.split()
+    for itm in getname:
+        #here we are going to delete more than one object that is why we used filter() method
+        #allimg=EventGallery.objects.all().filter(pk=i)
+        #here itm is a string and we need to convert it to integer
+        allimg=EventGallery.objects.get(pk=int(itm))
+        collname=allimg.eventname #storing the gallery collection name to send it back to the managegallery.html
+        #here we are looping through the selecte objects with gallery collection name getname
+        #for img in allimg:
+        #    img.delete()
+        allimg.delete()
+    
+    #after fully deleting the images send a successfll message    
+    messages.success(request,"All Images in the Gallery Collections were deleted successfully for collection "+itm)
     img_list=EventGallery.objects.all().order_by('-event_date')
     #To get only the distinct names of the event gallery
     evn_list=EventGallery.objects.all().values('name').distinct()
     template_name='gallery/managegallery.html'
-    return render(request,template_name,{'img_list':img_list,
-                                                'evn_list':evn_list,'getname':'nogallery','collname':"All Images In The Gallery"
-                                                }
-                        )
-    #return redirect('home')
+    return render(request,template_name,{
+        'img_list':img_list,
+        'evn_list':evn_list,
+        'getname':'nogallery',
+        'collname':"All Images In The Gallery"
+        }
+    )
+        #return redirect('home')
 
 
 

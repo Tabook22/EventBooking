@@ -5,9 +5,9 @@ Dropzone.autoDiscover=false; //prevent dropzone to automatically discover the dr
                              //It is recommanded to initiate form or the dropzone object by hand. This way you can get the dropzone instance and query it about the uploaded files.
 const myDropzone = new Dropzone("#my-dropzone",{
     url:"upload/",//dropzone needs a url attribute or it complains, what value you put here does not really matter. It is only purpose is to prevent a javascript error message from chrome console
-    maxFiles:4,
+    maxFiles:10,
     maxFilesize:2,
-    parallelUploads:4,
+    parallelUploads:10,
     acceptedFiles:".jpeg,.jpg,.bmp,.png,.gif",
     autoProcessQueue: false,// prevent dropzone from uploading automatically
     init: function () {

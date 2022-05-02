@@ -6,8 +6,8 @@ Galler List
 
 {% block content %}
 <h1>Manage Gallery Collections</h1>
+<!-----------------------Drop Down list  Section ----------------------------------->
 <div class="container">
-
     <div class="row">
         <form id="post-form" method="POST" action="{% url 'manage-Gallery' %}">
             {% csrf_token %}
@@ -18,30 +18,30 @@ Galler List
                     <option value="{{ img.name }}">{{img.name}}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg"
+               <!--<button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg"
                     style="width:10rem;font-size:1rem;">
-                    Show Images </button>
+                    Show Images </button>--> 
             </div>
 
 
         </form>
     </div>
 </div>
+<!-----------------------Gallery Info Section ----------------------------------->
 <br />
 <div class="container">
-
     <div class="row">
         <div id="envinfo" class="alert alert-light" role="alert">{{collname}}</div>
     </div>
-
+<!-----------------------Gallery All Images ----------------------------------->
     <div id="allimg" class="row">
     <div class="row">
         <div style="display:flex; justify-content:first;align-items: center;flex-direction: row;">
-            <input type="checkbox" id="select_all" class="form-check-input" /> Select all
-            <a href="#" id="deleteall" class="btn btn-danger btn-lg" style="width:10rem;margin-right:20px;">Delete
-                all</a>
-            <button type="button" id="deleteselected" class="btn btn-outline-secondary btn-lg" style="width:12rem;">
-                Delete selected</button>
+            
+            
+               <!-- <a type="button" id="deleteselected"><i class="fa-solid fa-rectangle-xmark"></i></a>
+            <button type="button" id="deleteselected" class="btn btn-outline-secondary btn-lg" style="width:12rem;margin-left:1rem;">
+               Delete Selected </button>-->
         </div>
 
     </div>
@@ -49,8 +49,8 @@ Galler List
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
+                    <th scope="col"><input type="checkbox" id="select_all" class="form-check-input" style="margin-right:1rem;" /></th>
+                    <th scope="col"><a href="#" type="button" id="deleteall" style="color:red; margin-left:1rem;"><i class="fa-solid fa-rectangle-xmark"></i></a></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -63,7 +63,7 @@ Galler List
                         {{ forloop.counter }}
                     </td>
                     <td>
-                            <input id="select_all" type="checkbox" class="form-check-input checkbox" value="img.id" />
+                            <input id="select_all" type="checkbox" name="d_name" class="form-check-input checkbox" value="{{img.id}}" />
                     </td>
                     <td>
                         <img src="{{ img.event_image.url }}" class="card-img-top" alt="{{ img.name }}"
@@ -71,7 +71,7 @@ Galler List
                     </td>
                     <td>
                         <div style="display:flex; justify-content:last;align-items: center;flex-direction: row;">
-                            <p style="font-size:1rem;color:#3b3b3b; width:80%">{{img.comment}}</p>
+                            <p style="font-size:1rem;color:#3b3b3b; width:80%;padding-right:1rem;text-align: justify;">{{img.comment}}</p>
                             <a href="#" id="deleteall" class="btn btn-secondary btn-lg" style="width:20%;margin-right:20px;">Edit Image</a>
                     </td>
                 </tr>
@@ -87,12 +87,16 @@ Galler List
 
 </div>
 </div>
+<!-----------------------Comfirm deletion Section ----------------------------------->
 <div id="delmsg_wrapper" style="display:none;">
     <div id="delmsg_content">
         <h2 style="font-size:1rem;">Are You Sure You Want To Delete all images in <span id="getselcol"
                 style="color:red;font-weight:bold;font-size:1rem;"></span></h2>
         <div>
-            <a href="{% url 'delete-all' getname %}" id="delallsections" class="btn btn-danger btn-lg"
+           <!--  <a href="{% url 'delete-all' getname %}" id="delallsections" class="btn btn-danger btn-lg"
+                style="width:10rem;margin-right:20px;">Delete all</a>-->
+                <a href="#" id="delallsections" 
+                class="btn btn-danger btn-lg" 
                 style="width:10rem;margin-right:20px;">Delete all</a>
             <input type="button" value="Cancel" id="canceldel" class="btn btn-secondary btn-lg"
                 style="width:10rem;margin-right:20px;">
