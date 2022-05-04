@@ -30,4 +30,6 @@ urlpatterns = [
     path('show_gallery/', views.showgallery, name='show-gallery'),
     path('manage_Gallery/', views.manageGallery, name="manage-Gallery"),
     path('delete_all/<str:getname>', views.detleteallimages, name="delete-all"),
+    path('edit_img/<str:id>', views.editimg, name="edit-img"),
+    path('update_img/<img_id>', views.updateimg, name="update-img"),
 ]

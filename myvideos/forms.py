@@ -72,8 +72,8 @@ class VideoForm(ModelForm):
 class EventGalleryForm(ModelForm):
     class Meta:
         model =EventGallery
-        fields=('name','event_date','eventname','venuename')
-        labels={'name':'','event_date':'','event name':'','venu name':''}
+        fields=('name','event_date','eventname','venuename','event_image','comment')
+        labels={'name':'','event_date':'','eventname':'','venuname':'',' event_image':'','comment':''}
         '''
         Widgets={
             'name':forms.TextInput(attrs={'class':'form-control', 'placeholder':'name'}),

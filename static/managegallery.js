@@ -54,8 +54,6 @@ $("#delallsections").on('click', function (e) {
     newUrl = "/videos/delete_all/" + getname
     //{% url 'delete-all' getname %}
     $("#delallsections").attr("href", newUrl);
-    alert("value is:- " + selected_val);
-
     hide();
 });
 $("#canceldel").click(function () {

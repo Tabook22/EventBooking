@@ -23,6 +23,27 @@ from django.db.models import Q
 #Import Paginaiton Stuff
 from django.core.paginator import Paginator, EmptyPage
 
+#Update image and save changes
+def updateimg(request, img_id): 
+    evtimg=EventGallery.objects.get(pk=img_id)
+    #here we are getting an instance of venue and add it to the form, notice we have also FILES in the form which we requesting
+    form=EventGalleryForm(request.POST or None,request.FILES or None, instance=evtimg)
+    if form.is_valid():
+        form.save()
+        return redirect('manage-Gallery')
+    return render(request, 'gallery/managegallery.html')
+
+
+#Edit Selected image from Gallery Collection
+def editimg(request, id):
+    #get selected image
+    getselimg=EventGallery.objects.get(pk=int(id));
+    
+    #here we are getting an instance of the image and adding it to the form
+    form=EventGalleryForm(request.POST or None,request.FILES or None, instance=getselimg)
+    
+    return render(request,'gallery/imgedit.html',{'form':form,'img_id':id})
+
 # Delete All images 
 def detleteallimages(request, getname):
     # the Idea here is sent text values then split them to create an array, then loop throught that array and delete images

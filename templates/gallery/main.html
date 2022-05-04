@@ -17,6 +17,7 @@ Upload now
     {% render_field form.event_date type="date" class="form-control form-control-lg mb-3" placeholder="Date" style="width:auto;" %}
     {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
     {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
+    {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="comment" style="width:auto;" %}
 
     <h4 style="margin-top:40px;">Please drag and drop images, <span style="color:red;">(Max No. 4)</span></h4>
     <hr>
@@ -35,5 +36,5 @@ Upload now
         Images</button>
 </div>
 
-<script src="{% static 'main.js' %}" defer></script>
+<script src="{% static 'main.js' %}" defer></script> 
 {% endblock content %}

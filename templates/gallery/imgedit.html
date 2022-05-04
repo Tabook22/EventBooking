@@ -1,0 +1,60 @@
+{% extends 'ahome.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}
+Galler List
+{% endblock title %}
+
+{% block content %}
+<h1>Image Edit (Gallery collection)</h1>
+<div class="container">
+    <div class="row">
+        <h1>This is the edit image </h1>
+        <form id="imgupdatedata" method="POST"  enctype="multipart/form-data" action="{% url 'update-img' img_id %}">
+            {% csrf_token %}
+            <!--{{ form.as_p }}-->
+            <!-- here i used widget_tweaks package to customize my form -->
+            <!--  
+            {% for field in form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {{filed|add_class:'form-control'}}
+                {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            {% endfor %}
+ -->
+            {% render_field form.name class="form-control form-control-lg mb-3" placeholder="Gallery Title" %}
+            {% render_field form.event_date type="date" class="form-control form-control-lg mb-3" placeholder="Date" style="width:auto;" %}
+            {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
+            {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
+            {% render_field form.event_image class="form-select form-select-lg mb-3" placeholder="Event Images" style="width:auto;" %}
+            {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="Event Comment" style="width:auto;" %}
+
+
+
+            <button type="submit" id="btnAdd">Update</button>
+        </form>
+        <script>
+            //var form3 = document.getElementById('imgupdatedata');
+            function submitForm(event){
+                alert("In The name of Allah");
+                var myForm = document.getElementById('imgupdatedata');
+                var action = myForm.getAttribute("action");
+                alert(action);
+                for (es = new FormData(myForm).entries(); !(e = es.next()).done && (pair = e.value);) {
+                    console.log(pair[0] + ', ' + pair[1]);
+                }
+                event.preventDefault();
+                //window.history.back();
+                //const formData = new FormData('imgupdatedata')
+                //console.log(...formData.entries()) 
+            }
+            
+        </script>
+    </div>
+
+    {% endblock content %}
