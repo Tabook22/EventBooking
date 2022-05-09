@@ -15,9 +15,9 @@ Upload now
     <!-- here i used widget_tweaks package to customize my form -->
     {% render_field form.name class="form-control form-control-lg mb-3" placeholder="Gallery Title" %}
     {% render_field form.event_date type="date" class="form-control form-control-lg mb-3" placeholder="Date" style="width:auto;" %}
-    {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
-    {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
-    {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="comment" style="width:auto;" %}
+    {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:15rem;" %}
+    {%  form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:15rem;" %}
+    {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="comment" style="width:100%;background-color:#f1f1f1;" %}
 
     <h4 style="margin-top:40px;">Please drag and drop images, <span style="color:red;">(Max No. 4)</span></h4>
     <hr>
@@ -31,9 +31,10 @@ Upload now
 
 </div>
 <br />
-<div class="d-grid gap-2 col-6 mx-auto" id="divbtn">
-    <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="margin-top:20px;">Save
+<div  style="display:flex;flex-direction:row;justify-content:center;align-items: center;" id="divbtn">
+    <button type="submit" id="submit-all" class="btn btn-outline-secondary btn-lg" style="width:10rem;margin-top:20px;">Save
         Images</button>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg" style="width:10rem;margin-top:20px;margin-left:20px;">Cancel</a>
 </div>
 
 <script src="{% static 'main.js' %}" defer></script> 
