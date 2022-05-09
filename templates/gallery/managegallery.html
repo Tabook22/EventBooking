@@ -9,7 +9,7 @@ Galler List
 <!-----------------------Drop Down list  Section ----------------------------------->
 <div class="container">
     <div class="row">
-        <form id="post-form" method="POST" action="{% url 'manage-Gallery' %}">
+        <form id="post-form" method="POST" action="{% url 'manage-gallery-sel' %}">
             {% csrf_token %}
             <div style="display:flex; justify-content:center;align-items: center;flex-direction: row;">
                 <select id="selevent" name="selevent" class="form-select" aria-label="Default select example">
@@ -31,14 +31,15 @@ Galler List
 <br />
 <div class="container">
     <div class="row">
-        <div id="envinfo" class="alert alert-light" role="alert">{{collname}}</div>
+        <div id="envinfo" class="alert alert-light" role="alert">
+            {{collname}}
+            <span style="font-size:0.5rem; color:#c1c1c1;">{{geteventdate}}</span>
+        </div>
     </div>
 <!-----------------------Gallery All Images ----------------------------------->
     <div id="allimg" class="row">
     <div class="row">
         <div style="display:flex; justify-content:first;align-items: center;flex-direction: row;">
-            
-            
                <!-- <a type="button" id="deleteselected"><i class="fa-solid fa-rectangle-xmark"></i></a>
             <button type="button" id="deleteselected" class="btn btn-outline-secondary btn-lg" style="width:12rem;margin-left:1rem;">
                Delete Selected </button>-->
@@ -57,7 +58,6 @@ Galler List
             <tbody>
                 {% for img in img_list %}
                 {% if img.event_image %}
-
                 <tr>
                     <td>
                         {{ forloop.counter }}
@@ -81,8 +81,30 @@ Galler List
 
             </tbody>
         </table>
+ <!-- Start Pagination -->
 
+ <nav aria-label="Page navigation example">
+    <ul class="pagination">
 
+        {% if img_list.has_previous %}
+        <li class="page-item"> <a href="{% url 'manage-Gallery' %}?page={{img_list.previous_page_number}}" class="page-link">&laquo</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo</span></li>
+        {% endif %}
+        {% for i in img_list.paginator.page_range %}
+        {% if img_list.number == i %}
+        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+        {% else %}
+        <li><a href="{% url 'manage-Gallery' %}?page={{ i }}" class="page-link">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if img_list.has_next %}
+        <li class="page-item"> <a href="{% url 'manage-Gallery' %}manage_Gallery/?page={{img_list.next_page_number }}" class="page-link">&raquo</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo</span></li>
+        {% endif %}
+    </ul>
+</nav>
     </div>
 
 </div>

@@ -6,7 +6,6 @@ $('#selevent').on('change', function (e) {
         .empty(); //clear all images to show only the images in the selected image gallery collection.
 
     //get the selected item text and add it to the delete link
-    //var selectVal = $("#selevent option:selected").text();
     var valueSelected = this.value;
     newUrl = "/videos/delete_all/" + valueSelected
     $("#delallsections").attr("href", newUrl);

@@ -9,7 +9,6 @@ Galler List
 <h1>Image Edit (Gallery collection)</h1>
 <div class="container">
     <div class="row">
-        <h1>This is the edit image </h1>
         <form id="imgupdatedata" method="POST"  enctype="multipart/form-data" action="{% url 'update-img' img_id %}">
             {% csrf_token %}
             <!--{{ form.as_p }}-->
@@ -32,11 +31,11 @@ Galler List
             {% render_field form.eventname class="form-select form-select-lg mb-3" placeholder="Event Name" style="width:auto;" %}
             {% render_field form.venuename class="form-select form-select-lg mb-3" placeholder="Venue Name" style="width:auto;" %}
             {% render_field form.event_image class="form-select form-select-lg mb-3" placeholder="Event Images" style="width:auto;" %}
-            {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="Event Comment" style="width:auto;" %}
+            {% render_field form.comment class="form-select form-select-lg mb-3" placeholder="Event Comment" style="width:100%;" %}
 
 
 
-            <button type="submit" id="btnAdd">Update</button>
+            <button type="submit" id="btnAdd" class="btn btn-outline-secondary btn-lg" style="width:10rem;margin-top:20px;">Update</button>
         </form>
         <script>
             //var form3 = document.getElementById('imgupdatedata');

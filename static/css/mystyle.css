@@ -1,6 +1,13 @@
+
+
 body{
     background-color:#f8f8f8;
     font-size:24px;
+}
+
+#main-wrapper{
+  padding:2rem;
+  margin-bottom:3rem;
 }
 
 #allimg{
@@ -258,10 +265,18 @@ h1
 #allimg{
   margin-bottom:140px;
 }
+
+.pagination-wrapper{
+  margin-bottom:10rem;
+  clear:both;
+}
 /****Stick Footer************************************************/
 footer {
   position: fixed;
-  height: 100px;
+  left: 0;
   bottom: 0;
   width: 100%;
+  /*background-color: red;*/
+  color: white;
+  text-align: center;
 }

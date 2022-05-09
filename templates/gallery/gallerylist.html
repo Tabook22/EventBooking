@@ -21,18 +21,18 @@ Galler List
                 Select Event</button>
         </form>
     </div>
-    <br/>
+    <br />
     <div id="envinfo" class="alert alert-light" role="alert">
         <div class="card" style="width:100%;">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><span style="font-weight:bold">Gallery Collection:-</span> {{getname}}</li>
-              <li class="list-group-item">{{geteventdate}}</li>
-              <li class="list-group-item"><span style="font-weight:bold">Event Name:- </span>{{eventdetails}}</li>
-              <li class="list-group-item"><span style="font-weight:bold">Venue:-</span>{{venuedetails}}</li>
-              <li class="list-group-item"><span style="font-weight:bold">Total Images:-</span>{{img_count}}</li>
+                <li class="list-group-item"><span style="font-weight:bold">Gallery Collection:-</span> {{getname}}</li>
+                <li class="list-group-item">{{geteventdate}}</li>
+                <li class="list-group-item"><span style="font-weight:bold">Event Name:- </span>{{eventdetails}}</li>
+                <li class="list-group-item"><span style="font-weight:bold">Venue:-</span>{{venuedetails}}</li>
+                <li class="list-group-item"><span style="font-weight:bold">Total Images:-</span>{{img_count}}</li>
             </ul>
-          </div>       
-    </div> 
+        </div>
+    </div>
 </div>
 <br />
 <div class="container">
@@ -54,28 +54,50 @@ Galler List
         {% endif %}
 
         {% endfor %}
+     
+        <!-- Start Pagination -->
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if img_list.has_previous %}
+                <li class="page-item"> <a href="?page={{img_list.previous_page_number}}" class="page-link">&laquo</a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo</span></li>
+                {% endif %}
+                {% for i in img_list.paginator.page_range %}
+                {% if img_list.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                <li><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if img_list.has_next %}
+                <li class="page-item"> <a href="?page={{img_list.next_page_number }}" class="page-link">&raquo</a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo</span></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
+
+
 </div>
 <!-- Check the submite button-->
 <script type="text/javascript">
-    $('#post-form').submit(function(e){
-        var selev = $('#selevent option:selected' ).val();
+    $('#post-form').submit(function (e) {
+        var selev = $('#selevent option:selected').val();
         $('#allimg').empty(); //clear all images
         $('#envinfo').empty(); // clear gallery event information
         //e.preventDefault(); 
-        if (selev==0){
-            e.preventDefault();    //stop form from submitting
+        if (selev == 0) {
+            e.preventDefault(); //stop form from submitting
             $('#envinfo').append('<span style="color:red;">Sorry!. Please Select the Gallery Event </span>');
         }
 
-    // do ajax now
-    //console.log("In the name of Allah"); 
-});
-
-
-
-
-
+        // do ajax now
+        //console.log("In the name of Allah"); 
+    });
 </script>
 
 

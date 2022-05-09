@@ -1,30 +1,31 @@
 {% include 'includes/header.html' %}
-<div class="main-wrapper" style="margin-top:60px;">
+<div cclass="d-flex flex-column min-vh-100">
   <div class="container">
     <div class="row" id="msgcont">
       {% if messages %}
-        {% for message in messages %}
+      {% for message in messages %}
 
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
       {% endif%}
     </div>
-    <!-- Clear the message dive-->
+    <!-- If there is any message in the main page clear the message div after 2 seconds -->
     <script type="text/javascript">
-      let msg=document.getElementById("msgcont");
-      setTimeout(function(){
-        document.getElementById("msgcont").innerHTML=""; 
-}, 5000);//wait 2 seconds
+      let msg = document.getElementById("msgcont");
+      setTimeout(function () {
+        document.getElementById("msgcont").innerHTML = "";
+      }, 5000); //wait 2 seconds
     </script>
+
     {% block content %}
 
     <!-- the contents of the the child pages -->
 
     {% endblock content %}
-    
+
   </div>
+  {% include 'includes/footer.html' %}
 </div>
-{% include 'includes/footer.html' %}

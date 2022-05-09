@@ -1,3 +1,4 @@
+
 //It is important to know that Dropzone.js uses ajax to upload files in a queue,
 //so your endpoint should process the upload as a singular file not multiple.
 

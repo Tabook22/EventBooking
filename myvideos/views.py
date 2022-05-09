@@ -76,56 +76,92 @@ def detleteallimages(request, getname):
     )
         #return redirect('home')
 
+#---------------------------------------------------------------------------------------------------
 
+#select managegallery to display
+#here if we change the selection option we need to send a post request to get the image collections of the specific event Collections
+#this will be dispalyed only on the selection changes because it is a post request
+def managegalleryselect(request):
+    if request.method == 'POST':
+        #values = request.POST.getlist('result') or request.POST.get('result) or request.POST['result']
+        #here we getting the selected option which was stored in selevent variable (the name of the selected option, check managegallery.html)
+        getname=request.POST.get("selevent")
 
-#Here we are going to manage the uploaded images
-def manageGallery(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            #values = request.POST.getlist('result') or request.POST.get('result) or request.POST['result']
-            getname=request.POST.get("selevent")
+        #here we need to filter the EventGallery to get more than one value, that is why we use filter,
+        #we choose to get the first one, because the resut is just a repetion
+        #the result will be a tuple
+        getevent=EventGallery.objects.all().filter(name=getname).values_list('eventname','event_date','venuename').first()
 
-            #here we need to filter the EventGallery get more than one value, that is why we use filter,
-            #we choose to get the first one, because the resut is just a repetion
-            #the result will be a tuple
-            getevent=EventGallery.objects.all().filter(name=getname).values_list('eventname','event_date','venuename').first()
-
-            #because the result is a tuble that is why we use the indexes 0, 1 to get the first and second values
-            getevntname=getevent[0]
-            geteventdate=getevent[1]
-            getvenuename=getevent[2]
+        #because the result is a tuble that is why we use the indexes 0, 1 to get the first and second values
+        getevntname=getevent[0] #this also will be used to search for a particulary event gallery using name and date, see bellow
+        geteventdate=getevent[1]
+        getvenuename=getevent[2]
             
-            #complex queries, to filter by eventname and date, show only images with the same event gallery and same date
-            img_list=EventGallery.objects.filter (Q(eventname=getevntname) & Q(event_date=geteventdate))
+        #complex queries, to filter by eventname and date, show only images with the same event gallery and same date
+        img_list=EventGallery.objects.filter (Q(eventname=getevntname) & Q(event_date=geteventdate))
 
-            #To get only the distinct names of the event gallery
-            evn_list=EventGallery.objects.all().values('name').distinct()
+        #To get only the distinct names of the event gallery, when you want to get the images of only one image gallery
+        evn_list=EventGallery.objects.all().values('name').distinct()
         
+        #Get the event name 
+        collname=Event.objects.get(pk=getevntname)
         
             
-            #Get the number of images in each gallery event
-            img_count=img_list.count()
-            #get event detaisl;
-            eventdetails=Event.objects.get(pk=getevntname)
-            #get venue detaisl;
-            venuedetails=Venue.objects.get(pk=getvenuename)
-            template_name='gallery/managegallery.html'
-            return render(request, template_name,{'img_list':img_list,
+        #Get the number of images in each gallery event
+        img_count=img_list.count()
+        #get event detaisl;
+        eventdetails=Event.objects.get(pk=getevntname)
+        #get venue detaisl;
+        venuedetails=Venue.objects.get(pk=getvenuename)
+            
+        #-----------pagination----------------------------------------------
+        #get the first 20 images in each page
+        p=Paginator(img_list,20)
+        #each request we are getting page
+        page=request.GET.get('page')
+        #Here we try to solve an issue if we try to go to a page which didn't exist
+        try:
+            img_list=p.get_page(page)
+        except EmptyPage:
+            img_list=p.get_page(1)
+        img_list=p.get_page(page)
+            
+            
+        template_name='gallery/managegallery.html'
+        return render(request, template_name,{'img_list':img_list,
                                                 'evn_list':evn_list,
                                                 'img_count':img_count,
                                                 'getname':getname,
-                                                'geteventdate':geteventdate,
+                                                'geteventdate':collname.event_date,
                                                 'eventdetails':eventdetails.name,
                                                 'venuedetails':venuedetails.name,
-                                                'collname':getname,
+                                                'collname':collname.name,
                                                 }
-                        )
-        else:
-            img_list=EventGallery.objects.all().order_by('-event_date')
-            #To get only the distinct names of the event gallery
-            evn_list=EventGallery.objects.all().values('name').distinct()
-            template_name='gallery/managegallery.html'
-            return render(request, template_name,{'img_list':img_list,
+                        ) 
+   
+
+
+#---------------------------------------------------------------------------------------------------
+#Here we are going to manage the uploaded images, this is the fist or all collection to start with
+#here also we manage images when pagination numbers are clicked, we juset sent a get request and we ge the specific image galler and its  image
+def manageGallery(request):
+    if request.user.is_authenticated:
+        img_list=EventGallery.objects.all().order_by('-event_date')
+        #To get only the distinct names of the event gallery
+        evn_list=EventGallery.objects.all().values('name').distinct()
+            
+        #get the first 20 images in each page
+        p=Paginator(img_list,20)
+        #each request we are getting page
+        page=request.GET.get('page')
+            #Here we try to solve an issue if we try to go to a page which didn't exist
+        try:
+            img_list=p.get_page(page)
+        except EmptyPage:
+            img_list=p.get_page(1)
+        img_list=p.get_page(page)
+        template_name='gallery/managegallery.html'
+        return render(request, template_name,{'img_list':img_list,
                                                 'evn_list':evn_list,'getname':'nogallery'
                                                 }
                         )
@@ -180,6 +216,7 @@ def showgallery(request):
                       )
         
         
+#---------------------------------------------------------------------------------------------------       
 #Image Gallery View------------------------------------------------------
 def galleryview(request):
     if request.method=="POST":
@@ -189,7 +226,7 @@ def galleryview(request):
         template_name='gallery/main.html'
         return render(request, template_name, {'form':form})
 
-
+#---------------------------------------------------------------------------------------------------
 #Image Gallery File Upload
 def file_upload_view(request):
     if request.method=='POST':
@@ -211,23 +248,34 @@ def file_upload_view(request):
 
     return JsonResponse({'post':'false'})
 
-
-
+#---------------------------------------------------------------------------------------------------
 #Show Gallery List --------------------------------------------------------------------
 def gallerylist(request):
-     #get all the images
+    #get all the images
     evn_list=EventGallery.objects.all().values('name').distinct()
     #evn_list=EventGallery.objects.all()
     img_list=EventGallery.objects.all()
 
     #Get counts
     img_count=EventGallery.objects.all().count()
-
     img_list=EventGallery.objects.all().order_by('-event_date')
+    
+    #get the first 10 images in each page
+    p=Paginator(img_list,10)
+    #each request we are getting page
+    page=request.GET.get('page')
+    #Here we try to solve an issue if we try to go to a page which didn't exist
+    try:
+        img_list=p.get_page(page)
+    except EmptyPage:
+        img_list=p.get_page(1)
+    img_list=p.get_page(page)
+            
+    
     template_name='gallery/gallerylist.html'
-    return render(request, template_name,{'img_list':img_list,'evn_list':evn_list,'img_count':img_count})
+    return render(request, template_name,{'img_list':img_list,'evn_list':evn_list,'img_count':img_count,})
 
-
+#---------------------------------------------------------------------------------------------------
 #Show single event
 def show_event(request, event_id):
     event= Event.objects.get(pk=event_id)
@@ -246,6 +294,7 @@ def venue_events(request, venue_id):
         messages.success(request,"This Venue Has No Events At This Time")
         return redirect('admin-approval')
 
+#---------------------------------------------------------------------------------------------------
 #Admin approval main event
 def adminapproval(request):
     #Get the Venues
@@ -285,6 +334,8 @@ def adminapproval(request):
 
     return render(request,'events/admin_approval.html')
 
+
+#---------------------------------------------------------------------------------------------------
 #My Events page
 def my_events(request):
     if request.user.is_authenticated:
@@ -299,6 +350,8 @@ def my_events(request):
         messages.success(request,("You are not authroized to view this page !!"))
         return redirect('home')
 
+
+#---------------------------------------------------------------------------------------------------
 #Generate a PDF for venues---------------------
 def venuePdf(request):
     #Create Bytestream buffer
@@ -344,6 +397,8 @@ def venuePdf(request):
     #Return something
     return FileResponse(buf, as_attachment=True, filename='venue_pdf.pdf')
 
+
+#---------------------------------------------------------------------------------------------------
 #Generate a CSV for venues---------------------
 def venueCsv(request):
     response=HttpResponse(content_type='text/csv')
@@ -365,6 +420,8 @@ def venueCsv(request):
 
     return response
 
+
+#---------------------------------------------------------------------------------------------------
 #Generate a text file for venues---------------------
 def venueText(request):
     response=HttpResponse(content_type='text/plain')
@@ -384,6 +441,8 @@ def venueText(request):
     response.writelines(lines)
     return response
 
+
+#---------------------------------------------------------------------------------------------------
 #Delete an Event-------------------------------------
 def deleteEvent(request, event_id):
     event=Event.objects.get(pk=event_id)
@@ -395,12 +454,17 @@ def deleteEvent(request, event_id):
     else:
         messages.success(request,("You can't delete this event, you are not authroized!!"))
         return redirect('list-events')
+
+
+#---------------------------------------------------------------------------------------------------
 #Delete an Venue-------------------------------------
 def deleteVenue(request, venue_id):
     venue=Venue.objects.get(pk=venue_id)
     venue.delete()
     return redirect('list-venues')
 
+
+#---------------------------------------------------------------------------------------------------
 # List of Venuens--------------------------------------
 def listVenues(request):
     #Set up Pagination
@@ -422,6 +486,8 @@ def listVenues(request):
     return render(request, 'events/venues.html',{
     'venues':venues})
 
+
+#---------------------------------------------------------------------------------------------------
 # Show venue-------------------------------------------
 def show_venue(request, venue_id):
     #get a particular venue
@@ -433,6 +499,8 @@ def show_venue(request, venue_id):
         'venue':venue,
         'venue_owner':venue_owner})
 
+
+#---------------------------------------------------------------------------------------------------
 #Update Venues--------------------------------------
 def updateVenue(request, venue_id):
     venue=Venue.objects.get(pk=venue_id)
@@ -444,6 +512,8 @@ def updateVenue(request, venue_id):
     return render(request, 'events/update_venue.html',{
         'venue':venue,'form':form})
 
+
+#---------------------------------------------------------------------------------------------------
 #Update Events--------------------------------------
 def updateEvent(request, event_id):
     event=Event.objects.get(pk=event_id)
@@ -463,6 +533,8 @@ def updateEvent(request, event_id):
     return render(request, 'events/update_event.html',{
         'event':event,'form':form})
 
+
+#---------------------------------------------------------------------------------------------------
 #Search Venues--------------------------------------
 def searchVenues(request):
     if request.method=="POST":
@@ -487,6 +559,8 @@ def searchVenues(request):
         msg="....Please Search for a Venue...."
         return render(request,'events/search_venues.html',{'msg':msg,})
 
+
+#---------------------------------------------------------------------------------------------------
 def searchEvents(request):
     if request.method=="POST":
         searched=request.POST['searched']
@@ -511,6 +585,8 @@ def searchEvents(request):
         msg="....Please Search for an Event...."
         return render(request,'events/search_events.html',{'msg':msg,})
 
+
+#---------------------------------------------------------------------------------------------------
 # Events-----------------------------------------------------------------
 def all_events(request):
     #get all the events by event date
@@ -521,6 +597,8 @@ def all_events(request):
         "event_list":event_list,
         })
 
+
+#---------------------------------------------------------------------------------------------------
 #Add Events---------------------------------------------------------------
 def addEvent(request):
     submitted=False
@@ -553,6 +631,8 @@ def addEvent(request):
     form=EventFormAdmin
     return render(request, 'events/add_event.html', {'form':form, 'submitted':submitted})
 
+
+#---------------------------------------------------------------------------------------------------
 #Add Venue--------------------------------------
 def addVenue(request):
     submitted=False
@@ -572,6 +652,8 @@ def addVenue(request):
 
     return render(request, 'events/add_venue.html', {'form':form, 'submitted':submitted})
 
+
+#---------------------------------------------------------------------------------------------------
 # Home page--------------------------------------
 #here we need to give a default year and month when we started the home view
 #datetime.now().year the current year, datetime.now().strftime('%B) the current month
@@ -608,6 +690,8 @@ def home(request,year=datetime.now().year, month=datetime.now().strftime('%B')):
         "event_list":event_list,
         })
 
+
+#---------------------------------------------------------------------------------------------------
 # Create your views here.
 def videos(request):
     return render(request,'videos/videolst.html')
@@ -627,6 +711,7 @@ def addVideos(request):
 
     return render(request, 'videos/add_video.html', {'form':form, 'submitted':submitted})
 
+#---------------------------------------------------------------------------------------------------
 # list video--------------------------------------
 def listVideos(request):
     return render(request, 'videos/video_list.html')
